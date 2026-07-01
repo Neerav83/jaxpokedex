@@ -114,7 +114,9 @@ class PokemonProvider with ChangeNotifier {
     _prefs = await SharedPreferences.getInstance();
     await _loadSettings();
     await _loadOwnedPokemon();
+    final oldOwnedIds = Set<int>.from(_ownedPokemonIds);
     await _loadCardCollections();
+    await _migrateOldOwnedPokemon(oldOwnedIds);
     await _loadCustomImagePaths();
     await fetchPokemon();
   }
@@ -276,6 +278,31 @@ class PokemonProvider with ChangeNotifier {
       } catch (e) {
         debugPrint('Error loading card collections: $e');
       }
+    }
+  }
+
+  Future<void> _migrateOldOwnedPokemon(Set<int> oldOwnedIds) async {
+    if (_prefs == null || oldOwnedIds.isEmpty) return;
+    
+    bool needsSave = false;
+    
+    for (final pokemonId in oldOwnedIds) {
+      if (!_cardCollections.containsKey(pokemonId)) {
+        final collection = CardCollection(
+          pokemonId: pokemonId,
+          ownedVariants: {CardVariant.common},
+        );
+        _cardCollections[pokemonId] = collection;
+        _ownedPokemonIds.add(pokemonId);
+        needsSave = true;
+        
+        debugPrint('Migrated Pokemon #$pokemonId to Common variant');
+      }
+    }
+    
+    if (needsSave) {
+      await _saveCardCollections();
+      debugPrint('Migration complete: ${oldOwnedIds.length - _cardCollections.length} Pokemon migrated');
     }
   }
 
