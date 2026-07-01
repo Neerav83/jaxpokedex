@@ -115,6 +115,17 @@ Generationerna definieras i `lib/services/api_service.dart`:
 | Gen VIII | 96 |
 | Gen IX | 120 |
 
+## CI/CD (automatisk APK-build, macOS-server)
+
+Vid push eller merge till `master` bygger GitHub Actions en ny APK på din Mac (self-hosted runner).
+
+Se [docs/ci-setup.md](docs/ci-setup.md) för macOS-setup.
+
+```bash
+cp scripts/macos-ci-env.example.sh scripts/macos-ci-env.sh
+bash scripts/server-build.sh
+```
+
 ## Licens
 
 Detta är ett personligt projekt. Pokémon och relaterade tillgångar tillhör Nintendo/Game Freak/The Pokémon Company.

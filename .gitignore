@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Lokal CI-miljö på macOS-server (kopiera från macos-ci-env.example.sh)
+scripts/macos-ci-env.sh
