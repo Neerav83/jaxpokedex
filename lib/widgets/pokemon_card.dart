@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 import '../models/pokemon.dart';
 import '../models/card_variant.dart';
 import '../providers/pokemon_provider.dart';
@@ -16,6 +17,8 @@ class PokemonCard extends StatelessWidget {
     final provider = context.watch<PokemonProvider>();
     final collection = provider.getCardCollection(pokemon.id);
     final isOwned = collection.hasAnyVariant;
+    final customImagePath = provider.getCustomImagePath(pokemon.id);
+    final hasCustomImage = provider.hasCustomImage(pokemon.id);
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -48,22 +51,42 @@ class PokemonCard extends StatelessWidget {
                     padding: const EdgeInsets.all(12.0),
                     child: Hero(
                       tag: 'pokemon-${pokemon.id}',
-                      child: Image.network(
-                        pokemon.imageUrl,
-                        fit: BoxFit.contain,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return const Center(
-                            child: CircularProgressIndicator(color: Colors.red),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Icon(
-                            Icons.error, 
-                            color: colorScheme.onSurfaceVariant,
-                          );
-                        },
-                      ),
+                      child: hasCustomImage && customImagePath != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.file(
+                                File(customImagePath),
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                    pokemon.imageUrl,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.error,
+                                        color: colorScheme.onSurfaceVariant,
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            )
+                          : Image.network(
+                              pokemon.imageUrl,
+                              fit: BoxFit.contain,
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return const Center(
+                                  child: CircularProgressIndicator(color: Colors.red),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.error,
+                                  color: colorScheme.onSurfaceVariant,
+                                );
+                              },
+                            ),
                     ),
                   ),
                   if (isOwned)
@@ -86,6 +109,23 @@ class PokemonCard extends StatelessWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
+                        ),
+                      ),
+                    ),
+                  if (hasCustomImage)
+                    Positioned(
+                      top: 4,
+                      left: 4,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF4A90E2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.photo_camera,
+                          color: Colors.white,
+                          size: 16,
                         ),
                       ),
                     ),

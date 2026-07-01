@@ -49,6 +49,12 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Ta foton av dina Pokémon-kort och figurer</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Välj bilder från ditt galleri för att visa dina Pokémon</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Spara bilder av dina Pokémon</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
