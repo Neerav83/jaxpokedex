@@ -11,3 +11,6 @@ export PATH="$JAVA_HOME/bin:$HOME/flutter/bin:/opt/homebrew/bin:$PATH"
 
 # Valfritt: annan mapp för färdiga APK:er
 # export JAXPOKEDEX_RELEASES_DIR="$HOME/jaxpokedex-releases"
+
+# Webserver – APK kopieras hit efter varje build
+export JAXPOKEDEX_WEB_DEPLOY_DIR="/Users/tommierundberg/webserver/localserver/jaxpokedex"

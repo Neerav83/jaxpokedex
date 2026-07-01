@@ -132,6 +132,19 @@ Artifacts hittar du under: **Actions** → vald körning → **Artifacts**.
 
 Färdiga APK:er kopieras även till `~/jaxpokedex-releases/` på servern.
 
+Efter bygget kopieras APK även till webservermappen (konfigureras i `macos-ci-env.sh`):
+
+```bash
+export JAXPOKEDEX_WEB_DEPLOY_DIR="/Users/tommierundberg/webserver/localserver/jaxpokedex"
+```
+
+Filer som publiceras:
+
+| Fil | Syfte |
+|-----|-------|
+| `jaxpokedex.apk` | Fast nedladdningslänk (senaste versionen) |
+| `jaxpokedex-1.2.0+3.apk` | Versionerad kopia |
+
 ## 4. Alternativ: SSH-deploy (utan self-hosted runner)
 
 Om du inte vill installera en runner kan du använda `.github/workflows/deploy-ssh.yml`.
@@ -151,7 +164,8 @@ Kör workflow manuellt via **Actions** → **Deploy and build via SSH** → **Ru
 
 | Variabel | Standard | Beskrivning |
 |----------|----------|-------------|
-| `JAXPOKEDEX_RELEASES_DIR` | `~/jaxpokedex-releases` | Var versionerade APK:er kopieras |
+| `JAXPOKEDEX_RELEASES_DIR` | `~/jaxpokedex-releases` | Lokal arkivmapp för APK:er |
+| `JAXPOKEDEX_WEB_DEPLOY_DIR` | *(ingen)* | Webservermapp, t.ex. `~/webserver/localserver/jaxpokedex` |
 
 ## 6. Manuell build
 

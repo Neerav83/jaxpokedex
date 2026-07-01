@@ -7,6 +7,9 @@ cd "$ROOT_DIR"
 if [[ -f "$ROOT_DIR/scripts/macos-ci-env.sh" ]]; then
   # shellcheck disable=SC1091
   source "$ROOT_DIR/scripts/macos-ci-env.sh"
+elif [[ -f "$ROOT_DIR/scripts/macos-ci-env.example.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$ROOT_DIR/scripts/macos-ci-env.example.sh"
 fi
 
 log() {
@@ -83,6 +86,17 @@ cp "$OUTPUT_DIR/app-release.apk" "$VERSIONED_APK"
 RELEASES_DIR="${JAXPOKEDEX_RELEASES_DIR:-$HOME/jaxpokedex-releases}"
 mkdir -p "$RELEASES_DIR"
 cp "$VERSIONED_APK" "$RELEASES_DIR/"
+
+WEB_DEPLOY_DIR="${JAXPOKEDEX_WEB_DEPLOY_DIR:-}"
+if [[ -n "$WEB_DEPLOY_DIR" ]]; then
+  mkdir -p "$WEB_DEPLOY_DIR"
+  cp "$VERSIONED_APK" "$WEB_DEPLOY_DIR/jaxpokedex-${VERSION}.apk"
+  cp "$VERSIONED_APK" "$WEB_DEPLOY_DIR/jaxpokedex.apk"
+  log "Webdeploy: $WEB_DEPLOY_DIR/jaxpokedex.apk"
+  log "Webdeploy (versionerad): $WEB_DEPLOY_DIR/jaxpokedex-${VERSION}.apk"
+else
+  log "Ingen webdeploy (sätt JAXPOKEDEX_WEB_DEPLOY_DIR i macos-ci-env.sh)."
+fi
 
 log "Klar."
 log "APK: $OUTPUT_DIR/app-release.apk"
