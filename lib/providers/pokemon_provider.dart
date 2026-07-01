@@ -26,6 +26,28 @@ class PokemonProvider with ChangeNotifier {
         .toList();
   }
 
+  List<Pokemon> ownedPokemonForGeneration(int generation) {
+    final range = idRangeForGeneration(generation);
+    return _allPokemon
+        .where(
+          (p) =>
+              _ownedPokemonIds.contains(p.id) &&
+              p.id >= range.minId &&
+              p.id <= range.maxId,
+        )
+        .toList();
+  }
+
+  int ownedCountForGeneration(int generation) {
+    final range = idRangeForGeneration(generation);
+    return _ownedPokemonIds
+        .where((id) => id >= range.minId && id <= range.maxId)
+        .length;
+  }
+
+  int totalCountForGeneration(int generation) =>
+      generationData[generation]!.count;
+
   final ApiService _apiService = ApiService();
   SharedPreferences? _prefs;
 
