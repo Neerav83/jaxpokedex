@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/pokemon.dart';
+import '../models/card_variant.dart';
 import '../providers/pokemon_provider.dart';
+import '../screens/pokemon_detail_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PokemonCard extends StatelessWidget {
@@ -12,56 +14,100 @@ class PokemonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<PokemonProvider>();
-    final isOwned = provider.ownedPokemonIds.contains(pokemon.id);
+    final collection = provider.getCardCollection(pokemon.id);
+    final isOwned = collection.hasAnyVariant;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF262238), // dark grey background
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Image.network(
-                pokemon.imageUrl,
-                fit: BoxFit.contain,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return const Center(
-                    child: CircularProgressIndicator(color: Colors.red),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.error, color: Colors.white54);
-                },
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PokemonDetailScreen(pokemon: pokemon),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF262238),
+          borderRadius: BorderRadius.circular(16),
+          border: isOwned
+              ? Border.all(color: const Color(0xFF4A90E2), width: 2)
+              : null,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Hero(
+                      tag: 'pokemon-${pokemon.id}',
+                      child: Image.network(
+                        pokemon.imageUrl,
+                        fit: BoxFit.contain,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(
+                            child: CircularProgressIndicator(color: Colors.red),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.error, color: Colors.white54);
+                        },
+                      ),
+                    ),
+                  ),
+                  if (isOwned)
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFED1C24),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${collection.variantCount}',
+                          style: GoogleFonts.plusJakartaSans(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-          ),
-          Text(
-            pokemon.name,
-            style: GoogleFonts.plusJakartaSans(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                pokemon.name,
+                style: GoogleFonts.plusJakartaSans(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          IconButton(
-            icon: Icon(
-              isOwned ? Icons.favorite : Icons.favorite_border,
-              color: isOwned ? const Color(0xFFED1C24) : Colors.white54,
+            const SizedBox(height: 4),
+            Icon(
+              isOwned ? Icons.check_circle : Icons.circle_outlined,
+              color: isOwned ? const Color(0xFF4A90E2) : Colors.white24,
               size: 20,
             ),
-            onPressed: () {
-              provider.toggleOwned(pokemon.id);
-            },
-          ),
-        ],
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import '../models/pokemon.dart';
+import '../models/card_variant.dart';
 import '../services/api_service.dart';
 
 class PokemonProvider with ChangeNotifier {
   List<Pokemon> _allPokemon = [];
   Set<int> _ownedPokemonIds = {};
+  Map<int, CardCollection> _cardCollections = {};
   bool _isLoading = true;
   bool _isDarkMode = true;
   int _selectedGeneration = 1;
 
   List<Pokemon> get allPokemon => _allPokemon;
   Set<int> get ownedPokemonIds => _ownedPokemonIds;
+  Map<int, CardCollection> get cardCollections => _cardCollections;
   bool get isLoading => _isLoading;
   bool get isDarkMode => _isDarkMode;
   int get selectedGeneration => _selectedGeneration;
@@ -59,6 +63,7 @@ class PokemonProvider with ChangeNotifier {
     _prefs = await SharedPreferences.getInstance();
     await _loadSettings();
     await _loadOwnedPokemon();
+    await _loadCardCollections();
     await fetchPokemon();
   }
 
@@ -111,7 +116,9 @@ class PokemonProvider with ChangeNotifier {
 
   Future<void> clearOwnedData() async {
     _ownedPokemonIds.clear();
+    _cardCollections.clear();
     await _saveOwnedPokemon();
+    await _saveCardCollections();
     notifyListeners();
   }
 
@@ -126,6 +133,68 @@ class PokemonProvider with ChangeNotifier {
     if (_prefs != null) {
       await _prefs!.setBool('dark_mode', _isDarkMode);
     }
+    notifyListeners();
+  }
+
+  CardCollection getCardCollection(int pokemonId) {
+    return _cardCollections[pokemonId] ??
+        CardCollection(pokemonId: pokemonId);
+  }
+
+  Future<void> toggleCardVariant(int pokemonId, CardVariant variant) async {
+    final collection = getCardCollection(pokemonId);
+    
+    if (collection.hasVariant(variant)) {
+      collection.ownedVariants.remove(variant);
+    } else {
+      collection.ownedVariants.add(variant);
+    }
+
+    if (collection.ownedVariants.isEmpty) {
+      _cardCollections.remove(pokemonId);
+      _ownedPokemonIds.remove(pokemonId);
+    } else {
+      _cardCollections[pokemonId] = collection;
+      _ownedPokemonIds.add(pokemonId);
+    }
+
+    await _saveCardCollections();
+    notifyListeners();
+  }
+
+  Future<void> _loadCardCollections() async {
+    if (_prefs == null) return;
+    final String? collectionsJson = _prefs!.getString('card_collections');
+    if (collectionsJson != null) {
+      try {
+        final Map<String, dynamic> decoded = json.decode(collectionsJson);
+        _cardCollections = decoded.map((key, value) {
+          final pokemonId = int.parse(key);
+          return MapEntry(
+            pokemonId,
+            CardCollection.fromJson(value as Map<String, dynamic>),
+          );
+        });
+        _ownedPokemonIds = _cardCollections.keys.toSet();
+      } catch (e) {
+        debugPrint('Error loading card collections: $e');
+      }
+    }
+  }
+
+  Future<void> _saveCardCollections() async {
+    if (_prefs == null) return;
+    final Map<String, dynamic> toSave = _cardCollections.map((key, value) {
+      return MapEntry(key.toString(), value.toJson());
+    });
+    await _prefs!.setString('card_collections', json.encode(toSave));
+    await _saveOwnedPokemon();
+  }
+
+  Future<void> clearCardCollections() async {
+    _cardCollections.clear();
+    _ownedPokemonIds.clear();
+    await _saveCardCollections();
     notifyListeners();
   }
 }
