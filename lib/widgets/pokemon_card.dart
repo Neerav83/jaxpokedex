@@ -9,8 +9,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 class PokemonCard extends StatelessWidget {
   final Pokemon pokemon;
+  final String heroScope;
 
-  const PokemonCard({super.key, required this.pokemon});
+  const PokemonCard({
+    super.key,
+    required this.pokemon,
+    required this.heroScope,
+  });
+
+  String get heroTag => '$heroScope-pokemon-${pokemon.id}';
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +34,10 @@ class PokemonCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PokemonDetailScreen(pokemon: pokemon),
+            builder: (context) => PokemonDetailScreen(
+              pokemon: pokemon,
+              heroTag: heroTag,
+            ),
           ),
         );
       },
@@ -50,7 +60,7 @@ class PokemonCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Hero(
-                      tag: 'pokemon-${pokemon.id}',
+                      tag: heroTag,
                       child: hasCustomImage && customImagePath != null
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(8),

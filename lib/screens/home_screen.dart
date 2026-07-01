@@ -110,7 +110,7 @@ class HomeScreen extends StatelessWidget {
                   itemCount: pokemonList.length,
                   itemBuilder: (context, index) {
                     final pokemon = pokemonList[index];
-                    return PokemonCard(pokemon: pokemon);
+                    return PokemonCard(pokemon: pokemon, heroScope: 'home');
                   },
                 );
               },

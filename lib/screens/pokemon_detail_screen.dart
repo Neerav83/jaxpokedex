@@ -10,8 +10,13 @@ import '../providers/pokemon_provider.dart';
 
 class PokemonDetailScreen extends StatefulWidget {
   final Pokemon pokemon;
+  final String heroTag;
 
-  const PokemonDetailScreen({super.key, required this.pokemon});
+  const PokemonDetailScreen({
+    super.key,
+    required this.pokemon,
+    required this.heroTag,
+  });
 
   @override
   State<PokemonDetailScreen> createState() => _PokemonDetailScreenState();
@@ -181,7 +186,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
                   alignment: Alignment.center,
                   children: [
                     Hero(
-                      tag: 'pokemon-${widget.pokemon.id}',
+                      tag: widget.heroTag,
                       child: Container(
                         height: 200,
                         padding: const EdgeInsets.all(20),

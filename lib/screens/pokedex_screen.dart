@@ -134,7 +134,10 @@ class _GenerationSection extends StatelessWidget {
                 ),
                 itemCount: ownedList.length,
                 itemBuilder: (context, index) {
-                  return PokemonCard(pokemon: ownedList[index]);
+                  return PokemonCard(
+                    pokemon: ownedList[index],
+                    heroScope: 'pokedex',
+                  );
                 },
               ),
           ],
