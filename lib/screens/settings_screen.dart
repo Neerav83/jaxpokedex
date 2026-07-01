@@ -40,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Divider(
-                color: colorScheme.outlineVariant.withOpacity(0.5),
+                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                 thickness: 1,
               ),
             ),
@@ -86,7 +86,7 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                     Divider(
-                      color: colorScheme.outlineVariant.withOpacity(0.3), 
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.3), 
                       height: 1,
                     ),
                     Consumer<PokemonProvider>(

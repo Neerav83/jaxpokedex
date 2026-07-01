@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import '../models/pokemon.dart';
-import '../models/card_variant.dart';
 import '../providers/pokemon_provider.dart';
 import '../screens/pokemon_detail_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -161,7 +160,7 @@ class PokemonCard extends StatelessWidget {
               isOwned ? Icons.check_circle : Icons.circle_outlined,
               color: isOwned 
                   ? const Color(0xFF4A90E2) 
-                  : colorScheme.onSurfaceVariant.withOpacity(0.3),
+                  : colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
               size: 20,
             ),
             const SizedBox(height: 8),

@@ -40,11 +40,12 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
         final String newPath = '${directory.path}/$fileName';
         
         await File(image.path).copy(newPath);
-        
-        if (mounted) {
-          await provider.setCustomImage(widget.pokemon.id, newPath);
-          
-          ScaffoldMessenger.of(context).showSnackBar(
+
+        if (!mounted) return;
+        await provider.setCustomImage(widget.pokemon.id, newPath);
+
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
                 'Foto sparat!',
@@ -53,7 +54,6 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
               backgroundColor: const Color(0xFF4A90E2),
             ),
           );
-        }
       }
     } catch (e) {
       if (mounted) {
@@ -262,7 +262,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF4A90E2).withOpacity(0.2),
+                        color: const Color(0xFF4A90E2).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: const Color(0xFF4A90E2),

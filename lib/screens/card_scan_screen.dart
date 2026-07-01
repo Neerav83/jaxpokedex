@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:io';
 import '../services/card_scanner_service.dart';
 import '../screens/scan_result_screen.dart';
 

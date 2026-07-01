@@ -250,6 +250,7 @@ class ScanResultScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => PokemonDetailScreen(
                             pokemon: pokemon,
+                            heroTag: 'scan-result-pokemon-${pokemon.id}',
                           ),
                         ),
                       );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/pokemon_provider.dart';
-import '../models/card_variant.dart';
 
 class StatisticsSection extends StatelessWidget {
   const StatisticsSection({super.key});
@@ -88,7 +87,7 @@ class StatisticsSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Divider(
-                      color: colorScheme.outlineVariant.withOpacity(0.3),
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.3),
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -248,10 +247,10 @@ class StatisticsSection extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E3A5F).withOpacity(0.5),
+            color: const Color(0xFF1E3A5F).withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: const Color(0xFF4A90E2).withOpacity(0.3),
+              color: const Color(0xFF4A90E2).withValues(alpha: 0.3),
               width: 1,
             ),
           ),

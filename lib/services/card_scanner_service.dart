@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:http/http.dart' as http;
@@ -91,15 +90,22 @@ class CardScannerService {
       cardName = lines.first;
     }
 
-    if (cardNumber != null || cardName != null) {
-      return {
-        if (cardNumber != null) 'number': cardNumber,
-        if (setNumber != null) 'setTotal': setNumber,
-        if (cardName != null) 'name': cardName,
-      };
+    final result = <String, String>{};
+    if (cardNumber != null) {
+      result['number'] = cardNumber;
+    }
+    if (setNumber != null) {
+      result['setTotal'] = setNumber;
+    }
+    if (cardName != null) {
+      result['name'] = cardName;
     }
 
-    return null;
+    if (result.isEmpty) {
+      return null;
+    }
+
+    return result;
   }
 
   Future<Pokemon?> _searchPokemonCard(Map<String, String> cardInfo) async {
