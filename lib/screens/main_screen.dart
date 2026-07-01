@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'pokedex_screen.dart';
 import 'search_screen.dart';
+import 'card_scan_screen.dart';
 import 'settings_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     const PokedexScreen(),
     const SearchScreen(),
+    const CardScanScreen(),
     const SettingsScreen(),
   ];
 
@@ -39,10 +41,14 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.grid_view),
             label: 'Pokédex',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Sök'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.qr_code_scanner),
+            label: 'Scanna',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Inställningar',
+            label: 'Settings',
           ),
         ],
       ),
