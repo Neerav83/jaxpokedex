@@ -17,6 +17,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return SafeArea(
       child: Column(
         children: [
@@ -32,7 +35,7 @@ class _SearchScreenState extends State<SearchScreen> {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 20),
@@ -45,13 +48,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   _searchQuery = value.toLowerCase();
                 });
               },
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: colorScheme.onSurface),
               decoration: InputDecoration(
                 hintText: 'Search Pokémon...',
-                hintStyle: const TextStyle(color: Colors.white54),
-                prefixIcon: const Icon(Icons.search, color: Colors.white54),
+                hintStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+                prefixIcon: Icon(Icons.search, color: colorScheme.onSurfaceVariant),
                 filled: true,
-                fillColor: const Color(0xFF262238),
+                fillColor: isDark 
+                    ? const Color(0xFF262238) 
+                    : colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide.none,
@@ -67,7 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Text(
                 'Sök på namn eller id.',
                 style: GoogleFonts.plusJakartaSans(
-                  color: Colors.white54,
+                  color: colorScheme.onSurfaceVariant,
                   fontSize: 14,
                 ),
               ),
@@ -77,6 +82,8 @@ class _SearchScreenState extends State<SearchScreen> {
           Expanded(
             child: Consumer<PokemonProvider>(
               builder: (context, provider, child) {
+                final colorScheme = Theme.of(context).colorScheme;
+                
                 if (_searchQuery.isEmpty) {
                   return const SizedBox.shrink();
                 }
@@ -91,7 +98,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Text(
                       'Inga Pokémon hittades.',
                       style: GoogleFonts.plusJakartaSans(
-                        color: Colors.white54,
+                        color: colorScheme.onSurfaceVariant,
                         fontSize: 16,
                       ),
                     ),

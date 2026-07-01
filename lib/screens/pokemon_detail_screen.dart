@@ -12,6 +12,9 @@ class PokemonDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -45,10 +48,10 @@ class PokemonDetailScreen extends StatelessWidget {
                         );
                       },
                       errorBuilder: (context, error, stackTrace) {
-                        return const Icon(
+                        return Icon(
                           Icons.error,
                           size: 100,
-                          color: Colors.white54,
+                          color: colorScheme.onSurfaceVariant,
                         );
                       },
                     ),
@@ -59,7 +62,7 @@ class PokemonDetailScreen extends StatelessWidget {
                   '#${pokemon.id.toString().padLeft(3, '0')}',
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 18,
-                    color: Colors.white54,
+                    color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -74,7 +77,7 @@ class PokemonDetailScreen extends StatelessWidget {
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                       Container(
@@ -121,7 +124,9 @@ class PokemonDetailScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: isOwned
                                 ? const Color(0xFF1E3A5F)
-                                : const Color(0xFF262238),
+                                : (isDark 
+                                    ? const Color(0xFF262238) 
+                                    : colorScheme.surfaceContainerHighest),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: isOwned
@@ -144,7 +149,7 @@ class PokemonDetailScreen extends StatelessWidget {
                                   border: Border.all(
                                     color: isOwned
                                         ? const Color(0xFF4A90E2)
-                                        : Colors.white54,
+                                        : colorScheme.onSurfaceVariant,
                                     width: 2,
                                   ),
                                 ),
@@ -168,7 +173,7 @@ class PokemonDetailScreen extends StatelessWidget {
                                   style: GoogleFonts.plusJakartaSans(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.white,
+                                    color: colorScheme.onSurface,
                                   ),
                                 ),
                               ),

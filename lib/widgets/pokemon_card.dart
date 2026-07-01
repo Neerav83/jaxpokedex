@@ -16,6 +16,8 @@ class PokemonCard extends StatelessWidget {
     final provider = context.watch<PokemonProvider>();
     final collection = provider.getCardCollection(pokemon.id);
     final isOwned = collection.hasAnyVariant;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: () {
@@ -28,7 +30,9 @@ class PokemonCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF262238),
+          color: isDark 
+              ? const Color(0xFF262238) 
+              : colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(16),
           border: isOwned
               ? Border.all(color: const Color(0xFF4A90E2), width: 2)
@@ -54,7 +58,10 @@ class PokemonCard extends StatelessWidget {
                           );
                         },
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.error, color: Colors.white54);
+                          return Icon(
+                            Icons.error, 
+                            color: colorScheme.onSurfaceVariant,
+                          );
                         },
                       ),
                     ),
@@ -90,7 +97,7 @@ class PokemonCard extends StatelessWidget {
               child: Text(
                 pokemon.name,
                 style: GoogleFonts.plusJakartaSans(
-                  color: Colors.white,
+                  color: colorScheme.onSurface,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
@@ -102,7 +109,9 @@ class PokemonCard extends StatelessWidget {
             const SizedBox(height: 4),
             Icon(
               isOwned ? Icons.check_circle : Icons.circle_outlined,
-              color: isOwned ? const Color(0xFF4A90E2) : Colors.white24,
+              color: isOwned 
+                  ? const Color(0xFF4A90E2) 
+                  : colorScheme.onSurfaceVariant.withOpacity(0.3),
               size: 20,
             ),
             const SizedBox(height: 8),

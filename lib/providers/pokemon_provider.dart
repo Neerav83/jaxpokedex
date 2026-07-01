@@ -52,6 +52,44 @@ class PokemonProvider with ChangeNotifier {
   int totalCountForGeneration(int generation) =>
       generationData[generation]!.count;
 
+  int get totalOwnedCount => _ownedPokemonIds.length;
+
+  double get overallCompletionPercentage =>
+      _allPokemon.isEmpty ? 0.0 : (_ownedPokemonIds.length / _allPokemon.length) * 100;
+
+  double completionPercentageForGeneration(int generation) {
+    final total = totalCountForGeneration(generation);
+    final owned = ownedCountForGeneration(generation);
+    return total == 0 ? 0.0 : (owned / total) * 100;
+  }
+
+  int get totalVariantCount {
+    return _cardCollections.values.fold(0, (sum, collection) => sum + collection.variantCount);
+  }
+
+  Map<CardVariant, int> get variantBreakdown {
+    final Map<CardVariant, int> breakdown = {};
+    for (var collection in _cardCollections.values) {
+      for (var variant in collection.ownedVariants) {
+        breakdown[variant] = (breakdown[variant] ?? 0) + 1;
+      }
+    }
+    return breakdown;
+  }
+
+  int get bestGenerationIndex {
+    int bestGen = 1;
+    double bestPercentage = 0.0;
+    for (int gen = 1; gen <= 9; gen++) {
+      final percentage = completionPercentageForGeneration(gen);
+      if (percentage > bestPercentage) {
+        bestPercentage = percentage;
+        bestGen = gen;
+      }
+    }
+    return bestGen;
+  }
+
   final ApiService _apiService = ApiService();
   SharedPreferences? _prefs;
 
