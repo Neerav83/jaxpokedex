@@ -8,6 +8,9 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return SafeArea(
       child: Column(
         children: [
@@ -23,7 +26,7 @@ class SettingsScreen extends StatelessWidget {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 30),
@@ -31,7 +34,9 @@ class SettingsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFF262238),
+                color: isDark 
+                    ? const Color(0xFF262238) 
+                    : colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -40,7 +45,7 @@ class SettingsScreen extends StatelessWidget {
                     title: Text(
                       'Enable Notifications',
                       style: GoogleFonts.plusJakartaSans(
-                        color: Colors.white,
+                        color: colorScheme.onSurface,
                         fontSize: 16,
                       ),
                     ),
@@ -51,14 +56,17 @@ class SettingsScreen extends StatelessWidget {
                       activeTrackColor: Colors.green,
                     ),
                   ),
-                  const Divider(color: Colors.white12, height: 1),
+                  Divider(
+                    color: colorScheme.outlineVariant.withOpacity(0.3), 
+                    height: 1,
+                  ),
                   Consumer<PokemonProvider>(
                     builder: (context, provider, child) {
                       return ListTile(
                         title: Text(
                           'Dark Mode',
                           style: GoogleFonts.plusJakartaSans(
-                            color: Colors.white,
+                            color: colorScheme.onSurface,
                             fontSize: 16,
                           ),
                         ),
@@ -116,24 +124,29 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showClearDataDialog(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF262238),
+        backgroundColor: isDark 
+            ? const Color(0xFF262238) 
+            : colorScheme.surfaceContainerHigh,
         title: Text(
           'Töm data',
-          style: GoogleFonts.plusJakartaSans(color: Colors.white),
+          style: GoogleFonts.plusJakartaSans(color: colorScheme.onSurface),
         ),
         content: Text(
           'Är du säker på att du vill ta bort alla fångade Pokémon? Detta kan inte ångras.',
-          style: GoogleFonts.plusJakartaSans(color: Colors.white70),
+          style: GoogleFonts.plusJakartaSans(color: colorScheme.onSurfaceVariant),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               'Avbryt',
-              style: GoogleFonts.plusJakartaSans(color: Colors.white54),
+              style: GoogleFonts.plusJakartaSans(color: colorScheme.onSurfaceVariant),
             ),
           ),
           TextButton(

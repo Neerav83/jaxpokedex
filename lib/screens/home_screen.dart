@@ -14,6 +14,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return SafeArea(
       child: Column(
         children: [
@@ -29,13 +31,16 @@ class HomeScreen extends StatelessWidget {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 16),
           // Generation selector chips
           Consumer<PokemonProvider>(
             builder: (context, provider, _) {
+              final colorScheme = Theme.of(context).colorScheme;
+              final isDark = Theme.of(context).brightness == Brightness.dark;
+              
               return SizedBox(
                 height: 40,
                 child: ListView.separated(
@@ -57,7 +62,9 @@ class HomeScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: isSelected
                               ? const Color(0xFFED1C24)
-                              : const Color(0xFF262238),
+                              : (isDark 
+                                  ? const Color(0xFF262238) 
+                                  : colorScheme.surfaceContainerHighest),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -65,7 +72,9 @@ class HomeScreen extends StatelessWidget {
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: isSelected 
+                                ? Colors.white 
+                                : colorScheme.onSurface,
                           ),
                         ),
                       ),

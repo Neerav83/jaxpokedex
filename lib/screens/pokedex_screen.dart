@@ -10,6 +10,8 @@ class PokedexScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return SafeArea(
       child: Column(
         children: [
@@ -25,7 +27,7 @@ class PokedexScreen extends StatelessWidget {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 20),
@@ -82,10 +84,15 @@ class _GenerationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF262238),
+        color: isDark 
+            ? const Color(0xFF262238) 
+            : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Theme(
@@ -93,14 +100,14 @@ class _GenerationSection extends StatelessWidget {
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          iconColor: Colors.white54,
-          collapsedIconColor: Colors.white54,
+          iconColor: colorScheme.onSurfaceVariant,
+          collapsedIconColor: colorScheme.onSurfaceVariant,
           title: Text(
             'Gen $generation  $ownedCount/$totalCount',
             style: GoogleFonts.plusJakartaSans(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: colorScheme.onSurface,
             ),
           ),
           children: [
@@ -110,7 +117,7 @@ class _GenerationSection extends StatelessWidget {
                 child: Text(
                   'Inga ägda Pokémon i denna generation.',
                   style: GoogleFonts.plusJakartaSans(
-                    color: Colors.white54,
+                    color: colorScheme.onSurfaceVariant,
                     fontSize: 14,
                   ),
                 ),
