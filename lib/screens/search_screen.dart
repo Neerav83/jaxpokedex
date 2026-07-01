@@ -118,7 +118,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   itemCount: filteredList.length,
                   itemBuilder: (context, index) {
-                    return PokemonCard(pokemon: filteredList[index]);
+                    return PokemonCard(
+                      pokemon: filteredList[index],
+                      heroScope: 'search',
+                    );
                   },
                 );
               },

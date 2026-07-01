@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import '../models/pokemon.dart';
 import '../models/card_variant.dart';
 import '../services/api_service.dart';
@@ -9,13 +11,24 @@ class PokemonProvider with ChangeNotifier {
   List<Pokemon> _allPokemon = [];
   Set<int> _ownedPokemonIds = {};
   Map<int, CardCollection> _cardCollections = {};
+  Map<int, String> _customImagePaths = {};
   bool _isLoading = true;
   bool _isDarkMode = true;
   int _selectedGeneration = 1;
 
-  List<Pokemon> get allPokemon => _allPokemon;
+  List<Pokemon> get allPokemon {
+    return _allPokemon.map((pokemon) {
+      final customPath = _customImagePaths[pokemon.id];
+      if (customPath != null) {
+        return pokemon.copyWith(customImagePath: customPath);
+      }
+      return pokemon;
+    }).toList();
+  }
+  
   Set<int> get ownedPokemonIds => _ownedPokemonIds;
   Map<int, CardCollection> get cardCollections => _cardCollections;
+  Map<int, String> get customImagePaths => _customImagePaths;
   bool get isLoading => _isLoading;
   bool get isDarkMode => _isDarkMode;
   int get selectedGeneration => _selectedGeneration;
@@ -102,6 +115,7 @@ class PokemonProvider with ChangeNotifier {
     await _loadSettings();
     await _loadOwnedPokemon();
     await _loadCardCollections();
+    await _loadCustomImagePaths();
     await fetchPokemon();
   }
 
@@ -155,9 +169,54 @@ class PokemonProvider with ChangeNotifier {
   Future<void> clearOwnedData() async {
     _ownedPokemonIds.clear();
     _cardCollections.clear();
+    _customImagePaths.clear();
     await _saveOwnedPokemon();
     await _saveCardCollections();
+    await _saveCustomImagePaths();
     notifyListeners();
+  }
+
+  Future<void> _loadCustomImagePaths() async {
+    if (_prefs == null) return;
+    final String? customImagesJson = _prefs!.getString('custom_image_paths');
+    if (customImagesJson != null) {
+      try {
+        final Map<String, dynamic> decoded = json.decode(customImagesJson);
+        _customImagePaths = decoded.map((key, value) {
+          return MapEntry(int.parse(key), value as String);
+        });
+      } catch (e) {
+        debugPrint('Error loading custom image paths: $e');
+      }
+    }
+  }
+
+  Future<void> _saveCustomImagePaths() async {
+    if (_prefs == null) return;
+    final Map<String, String> toSave = _customImagePaths.map((key, value) {
+      return MapEntry(key.toString(), value);
+    });
+    await _prefs!.setString('custom_image_paths', json.encode(toSave));
+  }
+
+  Future<void> setCustomImage(int pokemonId, String imagePath) async {
+    _customImagePaths[pokemonId] = imagePath;
+    await _saveCustomImagePaths();
+    notifyListeners();
+  }
+
+  Future<void> removeCustomImage(int pokemonId) async {
+    _customImagePaths.remove(pokemonId);
+    await _saveCustomImagePaths();
+    notifyListeners();
+  }
+
+  String? getCustomImagePath(int pokemonId) {
+    return _customImagePaths[pokemonId];
+  }
+
+  bool hasCustomImage(int pokemonId) {
+    return _customImagePaths.containsKey(pokemonId);
   }
 
   Future<void> _loadSettings() async {

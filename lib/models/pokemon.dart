@@ -2,11 +2,13 @@ class Pokemon {
   final int id;
   final String name;
   final String imageUrl;
+  final String? customImagePath;
 
   Pokemon({
     required this.id,
     required this.name,
     required this.imageUrl,
+    this.customImagePath,
   });
 
   factory Pokemon.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,28 @@ class Pokemon {
       name: capitalizedName,
       // Use official artwork instead of default small sprite for better look
       imageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png',
+      customImagePath: json['customImagePath'] as String?,
     );
   }
+
+  Pokemon copyWith({
+    int? id,
+    String? name,
+    String? imageUrl,
+    String? customImagePath,
+    bool clearCustomImage = false,
+  }) {
+    return Pokemon(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      imageUrl: imageUrl ?? this.imageUrl,
+      customImagePath: clearCustomImage ? null : (customImagePath ?? this.customImagePath),
+    );
+  }
+
+  String getDisplayImagePath() {
+    return customImagePath ?? imageUrl;
+  }
+
+  bool get hasCustomImage => customImagePath != null;
 }
