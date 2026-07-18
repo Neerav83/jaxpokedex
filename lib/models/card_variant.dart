@@ -10,6 +10,7 @@ enum CardVariant {
   hyperRare('Hyper Rare', '💎'),
   vCard('V Card', '⚡'),
   vmaxCard('VMAX Card', '🔥'),
+  megaCard('Mega Card', '💫'),
   exCard('EX Card', '💥'),
   gxCard('GX Card', '🎯'),
   shiny('Shiny', '✨'),
